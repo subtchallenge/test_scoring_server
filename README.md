@@ -39,6 +39,6 @@ Add this header:
 to any request sent to the endpoints.
 
 
-To run the API tests:
+To run the API tests (with the server running as above):
 
-    $ docker-compose exec django pytest
+    $ docker-compose exec django pytest -v
