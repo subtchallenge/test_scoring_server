@@ -37,3 +37,8 @@ Add this header:
     Authorization: Bearer tokentokentoken1
 
 to any request sent to the endpoints.
+
+
+To run the API tests:
+
+    $ docker-compose exec django pytest
