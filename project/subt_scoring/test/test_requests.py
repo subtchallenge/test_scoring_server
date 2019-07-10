@@ -1,24 +1,37 @@
-import requests
 import random
 
-def test_token_access_no_token(host, no_token_headers):
-    url = "{}/api/status".format(host)
+import requests
+import pytest
+
+
+@pytest.mark.parametrize("status_endpoint", ['/api/status', '/api/status/'])
+def test_token_access_no_token(host, status_endpoint, no_token_headers):
+    url = "{}{}".format(host, status_endpoint)
     response = requests.get(url, headers=no_token_headers)
     assert response.status_code == 401
 
-def test_token_access_invalid(host, invalid_token_headers):
-    url = "{}/api/status".format(host)
+
+@pytest.mark.parametrize("status_endpoint", ['/api/status', '/api/status/'])
+def test_token_access_invalid(host, status_endpoint, invalid_token_headers):
+    url = "{}{}".format(host, status_endpoint)
     response = requests.get(url, headers=invalid_token_headers)
     assert response.status_code == 401
 
-def test_get_status(host, json_headers):
-    url = "{}/api/status".format(host)
+
+@pytest.mark.parametrize("status_endpoint", ['/api/status', '/api/status/'])
+def test_get_status(host, status_endpoint, json_headers):
+    url = "{}{}".format(host, status_endpoint)
     response = requests.get(url, headers=json_headers)
     assert response.status_code == 200
+    assert type(response.json()["score"]) is int
+    assert type(response.json()["run_clock"]) is float
+    assert type(response.json()["remaining_reports"]) is int
+    assert type(response.json()["current_team"]) is str
 
 
-def test_post_artifact_report_valid(host, json_headers):
-    url = "{}/api/artifact_reports".format(host)
+@pytest.mark.parametrize("artifact_endpoint", ['/api/artifact_reports', '/api/artifact_reports/'])
+def test_post_artifact_report_valid(host, artifact_endpoint, json_headers):
+    url = "{}{}".format(host, artifact_endpoint)
     
     valid_data = {
         "x" : 100,
@@ -48,8 +61,9 @@ def test_post_artifact_report_valid(host, json_headers):
     assert type(response.json()["score_change"]) is int
 
 
-def test_post_artifact_report_valid_random_float(host, rand_str, json_headers):
-    url = "{}/api/artifact_reports".format(host)
+@pytest.mark.parametrize("artifact_endpoint", ['/api/artifact_reports', '/api/artifact_reports/'])
+def test_post_artifact_report_valid_random_float(host, artifact_endpoint, rand_str, json_headers):
+    url = "{}{}".format(host, artifact_endpoint)
 
     min_= 0
     max_ = 100
@@ -65,7 +79,6 @@ def test_post_artifact_report_valid_random_float(host, rand_str, json_headers):
     response = requests.post(url, json=valid_data, headers=json_headers)
 
     assert response.status_code == 201
-
     assert type(response.json()["url"]) is str
     assert type(response.json()["id"]) is int
     try:
@@ -83,8 +96,10 @@ def test_post_artifact_report_valid_random_float(host, rand_str, json_headers):
     assert type(response.json()["report_status"]) is str
     assert type(response.json()["score_change"]) is int
 
-def test_post_artifact_report_invalid_missing_key(host, json_headers):
-    url = "{}/api/artifact_reports".format(host)
+
+@pytest.mark.parametrize("artifact_endpoint", ['/api/artifact_reports', '/api/artifact_reports/'])
+def test_post_artifact_report_invalid_missing_key(host, artifact_endpoint, json_headers):
+    url = "{}{}".format(host, artifact_endpoint)
 
     invalid_data = {}
     response = requests.post(url, json=invalid_data, headers=json_headers)
