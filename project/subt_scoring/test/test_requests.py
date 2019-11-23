@@ -105,3 +105,46 @@ def test_post_artifact_report_invalid_missing_key(host, artifact_endpoint, json_
     response = requests.post(url, json=invalid_data, headers=json_headers)
 
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize("artifact_endpoint", ['/api/artifact_reports', '/api/artifact_reports/'])
+@pytest.mark.parametrize("artifact_type", ["survivor", "backpack", "cell phone", "vent", "gas"])
+def test_post_artifact_report_types(host, artifact_endpoint, json_headers, artifact_type):
+    url = "{}{}".format(host, artifact_endpoint)
+
+    min_= 0
+    max_ = 100
+    str_len = 5
+
+    valid_data = {
+        "x" : random.uniform(min_,max_),
+        "y" : random.uniform(-1 * max_,min_),
+        "z" : random.uniform(min_,max_),
+        "type" : artifact_type,
+    }
+
+    response = requests.post(url, json=valid_data, headers=json_headers)
+
+    assert response.status_code == 201
+    assert response.json()["score_change"] == 1
+
+
+@pytest.mark.parametrize("artifact_endpoint", ['/api/artifact_reports', '/api/artifact_reports/'])
+def test_post_artifact_report_non_types(host, artifact_endpoint, rand_str, json_headers):
+    url = "{}{}".format(host, artifact_endpoint)
+
+    min_= 0
+    max_ = 100
+    str_len = 5
+
+    valid_data = {
+        "x" : random.uniform(min_,max_),
+        "y" : random.uniform(-1 * max_,min_),
+        "z" : random.uniform(min_,max_),
+        "type" : rand_str(str_len),
+    }
+
+    response = requests.post(url, json=valid_data, headers=json_headers)
+
+    assert response.status_code == 201
+    assert response.json()["score_change"] == 0
