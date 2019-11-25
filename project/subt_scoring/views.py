@@ -2,8 +2,6 @@ from rest_framework import views, viewsets
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -32,14 +30,10 @@ class StatusView(views.APIView):
     Endpoint to receive status of the current run
     """
 
-    #authentication_classes = [SessionAuthentication, BearerAuthentication,]
-    permission_classes = [IsAuthenticated,]
 
     def get(self, request, format=None):
         to_return = {}
         to_return['score'] = 9000
-        # document has conflicting fields
-        # says run_clock but example says clock
         to_return['run_clock'] = 25.98
         to_return['remaining_reports'] = 6
         to_return['current_team'] = request.user.username
@@ -51,8 +45,6 @@ class ArtifactReportView(views.APIView):
     Endpoint for submitting artifact reports
     """
     
-    #authentication_classes = [SessionAuthentication, BearerAuthentication,]
-    permission_classes = [IsAuthenticated,]
 
     def post(self, request, format=None):
         if not isinstance(request.data, dict):
@@ -66,10 +58,9 @@ class ArtifactReportView(views.APIView):
         except KeyError as e:
             error_string = "Missing field: {}".format(e)
             return Response(error_string, status=status.HTTP_422_UNPROCESSABLE_ENTITY, content_type="application/json")
-        # TODO replace the following with proper return response
         
         to_return = {}
-        to_return["url"] = "some url string"
+        to_return["url"] = "http://<ipaddress>:<port>/api/artifact_reports/1"
         to_return["id"] = 9
         to_return["x"] = request.data["x"]
         to_return["y"] = request.data["y"]
@@ -78,10 +69,13 @@ class ArtifactReportView(views.APIView):
         to_return["submitted_datetime"] = timezone.now().isoformat()
         to_return["run_clock"] = 3.14
         to_return["team"] = request.user.username
-        to_return["run"] = "identifier for the run"
+        to_return["run"] = "1"
         to_return["report_status"] = "scored"
-        to_return["score_change"] = 1
 
+        if request.data["type"].lower() in ["survivor", "backpack", "cell phone", "vent", "gas"]:
+            to_return["score_change"] = 1
+        else: 
+            to_return["score_change"] = 0
 
         return Response(to_return, status=status.HTTP_201_CREATED, content_type="application/json")
 
@@ -92,8 +86,6 @@ class MapUpdateView(views.APIView):
     Endpoint to submit map telemetry
     """
 
-    #authentication_classes = [SessionAuthentication, BearerAuthentication,]
-    permission_classes = [IsAuthenticated,]
     parser_classes =  [JSONParser, CBORParser,]
 
     map_2D = "OccupancyGrid"
@@ -157,7 +149,6 @@ class MapUpdateView(views.APIView):
         for field in point_schema:
             pass
 
-        # TODO Do other processing
         return Response(None, content_type="application/json")
 
     def post(self, request, format=None):
@@ -183,8 +174,6 @@ class StateUpdateView(views.APIView):
     Endpoint to submit entity state telemetry
     """
 
-    #authentication_classes = [SessionAuthentication, BearerAuthentication,]
-    permission_classes = [IsAuthenticated,]
     parser_classes =  [JSONParser, CBORParser,]
 
     def post(self, request, format=None):
