@@ -72,7 +72,7 @@ class ArtifactReportView(views.APIView):
         to_return["run"] = "1"
         to_return["report_status"] = "scored"
 
-        if request.data["type"].lower() in ["survivor", "backpack", "cell phone", "vent", "gas"]:
+        if request.data["type"].lower() in ["survivor", "backpack", "cell phone", "fire extinguisher", "drill", "vent", "gas", "rope", "helmet", "cube"]:
             to_return["score_change"] = 1
         else: 
             to_return["score_change"] = 0
