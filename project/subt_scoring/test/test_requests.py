@@ -108,7 +108,7 @@ def test_post_artifact_report_invalid_missing_key(host, artifact_endpoint, json_
 
 
 @pytest.mark.parametrize("artifact_endpoint", ['/api/artifact_reports', '/api/artifact_reports/'])
-@pytest.mark.parametrize("artifact_type", ["survivor", "backpack", "cell phone", "vent", "gas"])
+@pytest.mark.parametrize("artifact_type", ["survivor", "backpack", "cell phone", "fire extinguisher", "drill", "vent", "gas", "rope", "helmet", "cube"])
 def test_post_artifact_report_types(host, artifact_endpoint, json_headers, artifact_type):
     url = "{}{}".format(host, artifact_endpoint)
 
