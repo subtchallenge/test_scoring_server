@@ -6,5 +6,10 @@ RUN apt update && apt install -y gunicorn
 ADD requirements.txt /tmp/
 
 RUN pip install -r /tmp/requirements.txt
-ENV C_FORCE_ROOT=true
 
+RUN useradd -u 1000 -m django
+USER django
+
+COPY --chown=django . /home/django/subt_root/
+
+WORKDIR /home/django/subt_root/
