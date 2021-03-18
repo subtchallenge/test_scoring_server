@@ -2,7 +2,7 @@
 
 The Scoring Server provides the software and interfaces to register and report score-related information for the DARPA Subterranean Challenge.
 
-### Getting Started ###
+## Getting Started ##
 Install Docker:
 
     $ sudo apt install docker.io
@@ -28,7 +28,9 @@ Confirm docker and docker-compose both work
     $ docker run hello-world
     $ docker-compose version
 
+## Starting the server ##
 To start the server, enter the directory that contains the docker-compose.yml file and run the following:  
+
     $ docker-compose up --build
 
 
@@ -43,4 +45,4 @@ To run the API tests (with the server running as above):
 
     $ docker-compose exec django pytest -v
 
-Note: This version of the Test Scoring Server will respond with "score_change" == 1 if a correct Urban Circuit artifact type is submitted (i.e., ["survivor", "backpack", "cell phone", "vent", "gas"]).  It will respond with "score_change" == 0 if the artifact type is incorrect.
+Note: This version of the Test Scoring Server will respond with "score_change" == 1 if a correct Final Event artifact type is submitted (i.e., ["survivor", "cell phone", "backpack", "drill", "fire extinguisher", "gas", "vent", "helmet", "rope", "cube"]). The type string must be spelled correctly, although it is case-insensitive. It will respond with "score_change" == 0 if the artifact type is invalid.
