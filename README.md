@@ -42,3 +42,5 @@ to any request sent to the endpoints.
 To run the API tests (with the server running as above):
 
     $ docker-compose exec django pytest -v
+
+Note: This version of the Test Scoring Server will respond with "score_change" == 1 if a correct Urban Circuit artifact type is submitted (i.e., ["survivor", "backpack", "cell phone", "vent", "gas"]).  It will respond with "score_change" == 0 if the artifact type is incorrect.
