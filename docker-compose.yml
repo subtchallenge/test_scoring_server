@@ -5,11 +5,8 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     restart: always
-    volumes:
-      - .:/subt_root
     build: ./project
     ports:
       - 8000:8000
-    working_dir: /subt_root/project
     command: python entry_point.py
 
